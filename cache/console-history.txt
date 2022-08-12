@@ -1,0 +1,356 @@
+.exit
+(await Bible.connect(await ethers.getSigner(owner)).deploy()).gasPrice
+await Bible.connect(await ethers.getSigner(owner)).deploy();
+      Bible = await ethers.getContractFactory("Bible", owner);
+      otherUser = (await hre.ethers.getSigners())[1].address;
+      owner = (await hre.ethers.getSigners())[0].address;
+    let owner, otherUser, Bible, bible;
+.exit
+(await bible.updateBibleVerse(verseIdentifier, verse)).gasPrice
+await bible.updateBibleVerse(verseIdentifier, verse).gasPrice
+await bible.updateBibleVerse(verseIdentifier, verse)
+ await hre.ethers.provider.estimateGas((await bible.updateBibleVerse(verseIdentifier, verse)));
+ await hre.ethers.provider.estimateGas(await bible.updateBibleVerse(verseIdentifier, verse););
+let [verseIdentifier, verse] = ["43-11-35-0", "Jesus wept."]
+totalCostOfProject.add(1)
+let totalCostOfProject = await hre.ethers.provider.estimateGas(Bible.getDeployTransaction());
+(await hre.ethers.provider.estimateGas(Bible.getDeployTransaction()));
+(await hre.ethers.provider.estimateGas(Bible.getDeployTransaction())).value;
+await hre.ethers.provider.estimateGas(Bible.getDeployTransaction());
+      bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+      Bible = await ethers.getContractFactory("Bible", owner);
+      otherUser = (await hre.ethers.getSigners())[1].address;
+      owner = (await hre.ethers.getSigners())[0].address;
+let owner, otherUser, Bible, bible;
+.exit
+      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
+      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal('');
+      await bible.connect(await ethers.getSigner(otherUser)).updateBibleVerse(verseIdentifier, verse);
+      expect(await bible.connect(await ethers.getSigner(otherUser)).callStatic.updateBibleVerse(verseIdentifier, verse)).to.equal('');
+      const [verseIdentifier, verse] = ["43-11-35-0", "Jesus wept."]
+const { expect } = require("chai");
+      bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+      Bible = await ethers.getContractFactory("Bible", owner);
+      otherUser = (await hre.ethers.getSigners())[1].address;
+      owner = (await hre.ethers.getSigners())[0].address;
+    let owner, otherUser, Bible, bible;
+.exit
+await bible.ADMINS(owner);
+await bible.ADMINS(otherUser);
+      expect(await bible.connect(await ethers.getSigner(otherUser)).callStatic.updateBibleVerse(verseIdentifier, verse)).to.equal('');
+[verseIdentifier, verse] = ["43-11-35-1", "Jesus wept.."]
+[verseIdentifier, verse] = ["43-11-35-0", "Jesus wept."]
+let [verseIdentifier, verse] = ["43-11-35-1", "Jesus wept."]
+      expect(await bible.connect(await ethers.getSigner(otherUser)).callStatic.updateBibleVerse(verseIdentifier, verse)).to.equal('');
+let [verseIdentifier, verse] = ["43-11-35-0", "Jesus wept."]
+const { expect } = require("chai");
+await deployment();
+    }  
+      bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+      Bible = await ethers.getContractFactory("Bible", owner);
+      otherUser = (await hre.ethers.getSigners())[1].address;
+      owner = (await hre.ethers.getSigners())[0].address;
+    async function deployment () {
+    let owner, otherUser, Bible, bible;
+.exit
+      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
+      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCK).to.equal(false);
+expect((await bible.BIBLE_VERSES(verseIdentifier1)).BIBLE_VERSE).to.equal('');
+let verseIdentifier1 = "";
+ verseIdentifier = "";
+      const verseIdentifier = "";
+(await bible.BIBLE_VERSES("asd")).BIBLE_VERSE
+expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse);
+      await bible.updateBibleVerse(verseIdentifier, verse);
+      const [verseIdentifier, verse] = ["66-22-21-0", "The grace of the Lord Jesus be with the saints. Amen."]
+await deployment();
+let totalCostOfProject = "";
+const { expect } = require("chai");
+    });
+        return await deployment();
+    before(async function() {
+    }  
+      bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+      Bible = await ethers.getContractFactory("Bible", owner);
+      otherUser = (await hre.ethers.getSigners())[1].address;
+      owner = (await hre.ethers.getSigners())[0].address;
+    async function deployment () {
+    let owner, otherUser, Bible, bible;
+.exit
+.exti
+await bible.ADMINS(otherUser)
+await bible.addNewAdmin(otherUser, true)
+await bible.ADMINS(otherUser)
+await bible.callStatic.addNewAdmin(otherUser, true)
+await bible.ADMINS(otherUser)
+await bible.ADMINS(owner);
+(await bible.ADMINS(owner)).to.equal(true);
+await bible.ADMINS(owner)).to.equal(true);
+await bible.ADMINS(owner)).to.equal(true)
+await deployment();
+    };
+      console.log("DONE");
+      bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+      Bible = await ethers.getContractFactory("Bible", owner);
+      otherUser = (await hre.ethers.getSigners())[0].address;
+      owner = (await hre.ethers.getSigners())[1].address;
+    async function deployment () {
+    let owner, otherUser, Bible, bible;
+.exit
+      bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+      Bible = await ethers.getContractFactory("Bible", owner);
+      otherUser = (await hre.ethers.getSigners())[0].address;
+      owner = (await hre.ethers.getSigners())[1].address;
+    let owner, otherUser, Bible, bible;
+await bible.callStatic.addNewAdmin(otherUser, true)
+await bible.callStatic.addNewAdmin(otherUser, false)
+await bible.ADMINS(otherUser)
+await bible.addNewAdmin(otherUser, false)
+await bible.ADMINS(otherUser)
+await bible.addNewAdmin(otherUser, true)
+expect(await bible.addNewAdmin(otherUser, true)).to.equal(true);
+      expect(await bible.ADMINS(otherUser)).to.equal(false);
+      expect(await bible.ADMINS(owner)).to.equal(true);
+      expect(await bible.SUPER_ADMIN()).to.equal(owner);
+const { expect } = require("chai");
+      bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+      Bible = await ethers.getContractFactory("Bible", owner);
+      otherUser = (await hre.ethers.getSigners())[0].address;
+      owner = (await hre.ethers.getSigners())[1].address;
+    let owner, otherUser, Bible, bible;
+.exit
+await bible.addNewAdmin(otherUser, false)
+await bible.connect(await ethers.getSigner(otherUser)).addNewAdmin(otherUser, false)
+    let otherUser = (await hre.ethers.getSigners())[0].address;
+await bible.ADMINS('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
+ (await hre.ethers.getSigners())[0].address;
+await bible.ADMINS('0x70997970C51812dc3A010C7d01b50e0d17dc79C2');
+await bible.ADMINS('0x70997970C51812dc3A010C7d01b50e0d17dc79C8');
+await bible.SUPER_ADMIN();
+    let bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+    let Bible = await ethers.getContractFactory("Bible", owner);
+    let owner = (await hre.ethers.getSigners())[1].address;
+.exit
+    let Bible = await ethers.getContractFactory("Bible", owner);
+    let owner = (await hre.ethers.getSigners())[1].address;
+    let bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+    let Bible = await ethers.getContractFactory("Bible", owner);
+    let owner = (await hre.ethers.getSigners())[1].address;
+.exit
+await bible.ADMINS(owner);
+await bible.ADMINS(owner).call();
+await bible.methods.ADMINS(owner).call();
+await bible.methods
+expect(await bible.SUPER_ADMIN()).to.equal(owner);
+let bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+let Bible = await hre.ethers.getContractFactory("Bible",owner);
+let bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+let bible = await Bible.connect(await ethers.getSigner(owner))
+let bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+await ethers.getSigner(owner)
+    let bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+    let owner = (await hre.ethers.getSigners())[1].address;
+    let bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+    let owner = (await hre.ethers.getSigners())[1].address;
+    const Bible = await ethers.getContractFactory("Lock");
+const { expect } = require("chai");
+await bible.SUPER_ADMIN()
+.exit
+expect(true).to.equal(true);
+expect(await bible.SUPER_ADMIN()).to.equal(owner);
+await bible.SUPER_ADMIN()
+expect(await bible.SUPER_ADMIN()).to.equal(owner);
+expect((await bible.SUPER_ADMIN()).toString()).to.equal(owner);
+expect((await bible.SUPER_ADMIN().toString()).to.equal(owner);
+expect((await bible.SUPER_ADMIN).toString()).to.equal(owner);
+expect((await bible.SUPER_ADMIN).toStriing()).to.equal(owner);
+expect(await bible.SUPER_ADMIN).to.equal(owner);
+expect(await bible.SUPER_ADMIN).to.strictEqual(owner)
+expect(await bible.SUPER_ADMIN).to.equal(owner);
+const { expect } = require("chai");
+await bible.SUPER_ADMIN()
+let bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+await ethers.getSigner(owner)
+let bible = await Bible.connect(owner).deploy();
+let owner = (await hre.ethers.getSigners())[1].address
+let Bible = await hre.ethers.getContractFactory("Bible");
+(await hre.ethers.getSigners())[0].address
+await bible.SUPER_ADMIN();
+await bible.SUPER_ADMIN().toString();
+let bible = await Bible.deploy();
+let Bible = await hre.ethers.getContractFactory("Bible",owner);
+let owner = (await hre.ethers.getSigners())[1].address;
+.exit
+await bible.SUPER_ADMIN().toString();
+await bible.SUPER_ADMIN();
+await bible.SUPER_ADMIN;
+bible.SUPER_ADMIN
+let bible = await Bible.deploy();
+let Bible = await hre.ethers.getContractFactory("Bible",owner);
+Bible = await hre.ethers.getContractFactory("Bible",owner);
+let owner = (await hre.ethers.getSigners())[1].address;
+(await hre.ethers.getSigners())[1].address;
+await hre.ethers.getContractFactory("Bible",'0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
+await hre.ethers.getContractFactory("Bible", ((await hre.ethers.getSigners())[0].address);
+await hre.ethers.getContractFactory("Bible", (await hre.ethers.getSigners()[0].address);
+await hre.ethers.getContractFactory("Bible",'0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
+(await hre.ethers.getSigners())[0].address;
+await hre.ethers.getContractFactory("Bible");
+await hre.ethers.getContractFactory("Bible", ((await hre.ethers.getSigners())[0].address);
+async () => {await hre.ethers.getContractFactory("Bible", ((await hre.ethers.getSigners())[0].address);}
+async ()=> await hre.ethers.getContractFactory("Bible", ((await hre.ethers.getSigners())[0].address);
+await hre.ethers.getContractFactory("Bible", ((await hre.ethers.getSigners())[0].address);
+hre.ethers.getContractFactory("Bible", ((await hre.ethers.getSigners())[0].address);
+hre.ethers.getContractFactory("Bible", ((hre.ethers.getSigners())[0].address);
+hre.ethers.getContractFactory("Bible", ((await hre.ethers.getSigners())[0].address);
+let Bible = await hre.ethers.getContractFactory("Bible");
+ ethers.getContractFactory("Bible", ((await ethers.getSigners())[0].address);
+hre.ethers.getContractFactory("Bible", ((await hre.ethers.getSigners())[0].address);
+ ethers.getContractFactory("Bible", ((await ethers.getSigners())[0].address);
+await ethers.getContractFactory("Bible", ((await ethers.getSigners())[0].address);
+(await ethers.getSigners())[0].address
+(await ethers.getSigners())[0]
+await ethers.getSigners()[0]
+await ethers.getSigners()
+await bible.updateBibleVerse("66-22-19-0","and if any man shall take away from the words of the book of this prophecy, God shall take away his part from the tree of life, and out of the holy city, which are written in this book.");
+await hre.ethers.utils.formatEther("67199069"); 
+await bible.updateBibleVerse("66-22-20-0","He who testifieth these things saith, Yea: I come quickly. Amen: come, Lord Jesus.");
+await bible.updateBibleVerse("66-22-21-0","The grace of the Lord Jesus be with the saints. Amen.");
+let bible = await Bible.deploy();
+await hre.ethers.provider.estimateGas(Bible.getDeployTransaction());
+let Bible = await hre.ethers.getContractFactory("Bible");
+.exit
+await bible.getSpecificBibleVerse("66-22-21-0");
+await bible.updateBibleVerse("66-22-21-0","The grace of the Lord Jesus be with the saints. Amen.");
+let bible = await Bible.deploy();
+let Bible = await hre.ethers.getContractFactory("Bible");
+.exit
+await bible.getBibleVerse();
+await bible.setBibleVerse(([66022021,66,22,21,"The grace of the Lord Jesus be with the saints. Amen."]));
+await bible.setBibleVerse(("id": 66022021,"b": 66,"c": 22,"v": 21,"t": "The grace of the Lord Jesus be with the saints. Amen."));
+await bible.setBibleVerse( {"id": 66022021,"b": 66,"c": 22,"v": 21,"t": "The grace of the Lord Jesus be with the saints. Amen."});
+await bible.setBibleVerse("id": 66022021,"b": 66,"c": 22,"v": 21,"t": "The grace of the Lord Jesus be with the saints. Amen.");
+await bible.setBibleVerse( {"id": 66022021,"b": 66,"c": 22,"v": 21,"t": "The grace of the Lord Jesus be with the saints. Amen."});
+ }
+   "t": "The grace of the Lord Jesus be with the saints. Amen."
+   "v": 21,
+   "c": 22,
+   "b": 66,
+   "id": 66022021,
+await bible.setBibleVerse( {);
+await bible.getBibleVerse();
+bible.getBibleVerse();
+bible
+let bible = await Bible.deploy();
+aawait Bible.deploy();
+Bible.deploy()
+let Bible = await hre.ethers.getContractFactory("Bible");
+.exit
+await hre.ethers.utils.formatEther("1158636062");
+await hre.ethers.provider.getGasPrice()
+await hre.ethers.utils.formatEther("1900831");
+await hre.ethers.provider.getGasPrice()
+await hre.ethers.signer.getGasPrice()
+await hre.ethers.provider.getGasPrice()
+await hre.ethers.provider.getGasPrice
+await hre.ethers.provider
+await hre.ethers.providers
+await hre.ethers.providers.types
+await hre.ethers.provider
+await hre.ethers.provider.estimateGas((await hre.ethers.getContractFactory("Counter")).getDeployTransaction());
+await hre.ethers.utils.formatEther("1900831");
+await hre.ethers.utils.formatEther("1900831")
+formatEther("0")
+await hre.ethers.provider.estimateGas((await hre.ethers.getContractFactory("Counter")).getDeployTransaction());
+await hre.ethers.getContractFactory("Counter")
+.exit
+await hre.ethers.getContractFactory("Counter")
+await hre.ethers.provider.estimateGas((await hre.ethers.getContractFactory("Counter")).getDeployTransaction());
+.exit
+exit
+await hre.ethers.provider.estimateGas((await hre.ethers.getContractFactory("Counter")).getDeployTransaction());
+await hre.ethers.provider.estimateGas((await hre.ethers.getContractFactory("Lock")).getDeployTransaction(unlockTime));
+  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
+  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
+await hre.ethers.provider.estimateGas((await hre.ethers.getContractFactory("Lock")).getDeployTransaction(222));
+await hre.ethers.provider.estimateGas((await hre.ethers.getContractFactory("Lock")).getDeployTransaction());
+await hre.ethers.provider.estimateGas((await hre.ethers.getContractFactory("Lock")).getDeployTransaction().data);
+await hre.ethers.provider.estimateGas((await hre.ethers.getContractFactory("Counter")).getDeployTransaction());
+await hre.ethers.provider.estimateGas((await hre.ethers.getContractFactory("Counter")).getDeployTransaction().data);
+await counter.get()
+await counter.mulBy(3)
+await counter.mul(3)
+await counter.get()
+await counter.inc()
+await counter.get()
+counter.get
+let counter = await hre.ethers.getContractAt("Counter","0x8a791620dd6260079bf849dc5567adc3f2fdc318");
+await Counter.deploy()
+const Counter = await hre.ethers.getContractFactory("Counter");
+await hre.ethers.getContractFactory("Counter")
+await hre.ethers.provider.estimateGas((await hre.ethers.getContractFactory("Counter")).getDeployTransaction().data);
+.exit
+await hre.ethers.getContractFactory("Counter")
+await hre.ethers.provider.estimateGas((await hre.ethers.getContractFactory("Counter")).getDeployTransaction().data);
+await hre.ethers.getContractFactory("Counter")
+(await hre.ethers.getContractFactory("Counter")
+await hre.ethers.provider.estimateGas((await hre.ethers.getContractFactory("Counter")).getDeployTransaction().data);
+await hre.ethers.provider.estimateGas(Counter.getDeployTransaction().data);
+Counter.getDeployTransaction()
+const Counter = await hre.ethers.getContractFactory("Counter").getDeployTransaction();
+Counter
+const Counter = await hre.ethers.getContractFactory("Counter");
+await counter.estimateGas.count()
+await counter.estimateGas
+await counter.get()
+await counter.dec()
+await counter.get()
+await counter.inc()
+await counter.get()
+await counter.inc()
+await counter.get()
+counter.get()
+await hre.ethers.provider.getCode("0x5FbDB2315678afecb367f032d93F642f64180aa3");
+await hre.ethers.provider.getBalance("0x5FbDB2315678afecb367f032d93F642f64180aa3");
+await hre.ethers.provider.getBalance("0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9");
+lock.balanceOf
+counter.balanceOf
+await hre.ethers.getBalance("0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9");
+let counter = await hre.ethers.getContractAt("Counter","0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9");
+let lock = await hre.ethers.getContractAt("Lock","0x5FbDB2315678afecb367f032d93F642f64180aa3");
+await hre.ethers.getContractAt("Lock","0x5FbDB2315678afecb367f032d93F642f64180aa3");
+await hre.ethers.getContractAt("Counter","0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9");
+.exit
+await hre.ethers.getContractAt("Counter","0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9");
+const Counter = await hre.ethers.getContractAt("Counter","0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9");
+const Counter = await hre.ethers.getContractAt("0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9");
+await hre.ethers.getContractAt("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266");
+const Counter = await hre.ethers.getContractAt("0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9");
+const counter = await Counter.deploy();
+const Counter = await hre.ethers.getContractFactory("Counter");
+counter.address
+const counter = await Counter.deploy();
+const Counter = await hre.ethers.getContractFactory("Counter");
+const counter = await Counter.deploy();
+const Counter = await hre.ethers.getContractAt("0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512");
+const Counter = await hre.ethers.Contract("0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512");
+const Counter = await hre.ethers.Contract(0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512");
+const Counter = await hre.ethers.Contract(0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512);
+.exit
+exit
+const counter = await Counter.deploy();
+const Counter = await hre.ethers.getContractFactory("Counter");
+config
+counter.interface
+counter.address
+const counter = await Counter.deploy();
+const Counter = await hre.ethers.getContractFactory("Counter");
+const hre = require("hardhat");
+exit
+ethers
+exit
+accounts
+accounts 
+accounts --network localhost
+config

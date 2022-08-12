@@ -1,0 +1,355 @@
+package main
+
+import (
+        "context"
+        "encoding/json"
+        "fmt"
+        "log"
+        "strconv"
+        "strings"
+        "time"
+
+        "github.com/Kong/go-pdk"
+        "github.com/Kong/go-pdk/server"
+        "github.com/go-redis/redis"
+        "github.com/rs/xid"
+)
+
+const Version = "1.0.0"
+const Priority = 1
+
+var dbHost = "ip/fqdn:portnumber"
+
+var dbPass = "password"
+
+var ctx = context.Background()
+
+type MyConfig struct {
+        SessionName string
+}
+
+type sessionDataFormat struct {
+        Key    string `json:"key"`
+        Action string `json:"action"`
+        Data   string `json:"data"`
+}
+
+func New() interface{} {
+        return &MyConfig{}
+}
+
+func main() {
+        server.StartServer(New, Version, Priority)
+}
+
+//intercepts the Access stage of kong
+func (conf *MyConfig) Access(kong *pdk.PDK) {
+
+        var sessionJSON sessionDataFormat
+        var resMap map[string]interface{}
+        var updateMap map[string]interface{}
+        var payload string
+        headers := make(map[string][]string)
+        signature := generateUserSig(kong)
+
+        //check for invalid plugin settings
+        if conf.SessionName == "" {
+                conf.SessionName = "BG-Session"
+        }
+
+        //look for data in header
+        session, err := kong.Request.GetHeader(conf.SessionName)
+
+        //no header matching the configured string, we need to stop them
+        //this will allow us to use this plugin on other endpoints to stop requests without a valid session
+        if err != nil {
+                payload = `{"status":"failure", "error":"missing session"}`
+                kong.Response.Exit(400, payload, headers)
+                return
+        }
+
+        //decode header to determine what needs to be done.
+        //assumed structure:
+        //{"key": "232f23f4fh66hhfdsd", "action": "update" | "create" | "read" | "delete", "data":"escaped json string"}
+        //(Data is only use on an update)
+
+        //unmarshal into my custom struct
+        err = json.Unmarshal([]byte(session), &sessionJSON)
+
+        //they didn't provide valid json, lets stop them.
+        if err != nil {
+                payload = `{"status":"failure", "error":"missing or invalid session json"}`
+                kong.Response.Exit(400, payload, headers)
+                return
+        }
+
+        //determine action type and execute it
+        if sessionJSON.Action == "create" {
+
+                if sessionJSON.Data != "" {
+                        //convert update string to a map
+                        err = json.Unmarshal([]byte(sessionJSON.Data), &updateMap)
+
+                        if err != nil {
+                                payload = `{"status":"failure", "error":"Failed to Unmarshal Create Data"}`
+                                kong.Response.Exit(500, payload, headers)
+                                return
+                        }
+                } else {
+                        updateMap = make(map[string]interface{})
+                }
+
+                //if new
+                res := createSessionData(signature, updateMap)
+
+                if strings.Contains(res, "Error") {
+                        //an error occurred
+                        payload = `{"status":"failure", "error":"` + res + `"}`
+                        kong.Response.Exit(500, payload, headers)
+                        return
+                } else {
+                        payload = `{"status":"success", "key":"` + res + `"}`
+                        kong.Response.SetHeader(conf.SessionName, fmt.Sprintf("%s", payload))
+                        kong.Response.Exit(200, payload, headers)
+                }
+        } else {
+                //check if they are using a valid user sig with the provided token
+                res := readSessionData(sessionJSON.Key)
+
+                //handle read result
+                if res == "Invalid" {
+                        //they passed an invalid or expired session key
+                        payload = `{"status":"failure", "error":"Invalid or Expired Session Token"}`
+                        kong.Response.Exit(400, payload, headers)
+                        return
+                } else if strings.Contains(res, "Error") {
+                        //an error occured
+                        payload = `{"status":"failure", "error":"` + res + `"}`
+                        kong.Response.Exit(500, payload, headers)
+                        return
+                } else {
+                        //validate
+                        err = json.Unmarshal([]byte(res), &resMap)
+
+                        if err != nil {
+                                payload = `{"status":"failure", "error":"Failed to Unmarshal Session Response"}`
+                                kong.Response.Exit(500, payload, headers)
+                                return
+                        }
+                        if signature != resMap["sig"] {
+                                payload = `{"status":"failure", "error":"Unable to Validate Session"}`
+                                kong.Response.Exit(500, payload, headers)
+                                return
+                        }
+                }
+
+                if sessionJSON.Action == "read" || sessionJSON.Action == "auth" {
+                        //if read or auth, lets massage the data and return it
+
+                        //strip out the sig & time out of the session data
+                        delete(resMap, "sig")
+                        delete(resMap, "time")
+
+                        //convert map back to string
+                        jsonStr, err := json.Marshal(resMap)
+
+                        if err != nil {
+                                payload = `{"status":"failure", "error":"Failed to Marshal Session Data"}`
+                                kong.Response.Exit(500, payload, headers)
+                                return
+                        }
+
+                        strings.Replace(string(jsonStr), `"`, `\"`, -1)
+
+                        //return the rest
+                        payload = `{"status":"success", "session": "` + string(jsonStr) + `"}`
+                        kong.Response.SetHeader(conf.SessionName, fmt.Sprintf("%s", payload))
+
+                        if sessionJSON.Action == "read" {
+                                kong.Response.Exit(200, payload, headers)
+                        }
+                } else if sessionJSON.Action == "update" {
+                        //if update
+
+                        //convert update string to a map
+                        err = json.Unmarshal([]byte(sessionJSON.Data), &updateMap)
+
+                        if err != nil {
+                                payload = `{"status":"failure", "error":"Failed to Unmarshal Update Data"}`
+                                kong.Response.Exit(500, payload, headers)
+                                return
+                        }
+
+                        for key, element := range updateMap {
+                                //replace data with the updated data
+                                resMap[key] = element
+                        }
+
+                        //convert map back to string
+                        jsonStr, err := json.Marshal(resMap)
+
+                        if err != nil {
+                                payload = `{"status":"failure", "error":"Failed to Marshal Session Update"}`
+                                kong.Response.Exit(500, payload, headers)
+                                return
+                        }
+
+                        res := updateSessionData(sessionJSON.Key, string(jsonStr))
+
+                        if strings.Contains(res, "Error") {
+                                //an error occured
+                                payload = `{"status":"failure", "error":"` + res + `"}`
+                                kong.Response.Exit(500, payload, headers)
+                                return
+                        } else {
+                                payload = `{"status":"success"}`
+                                kong.Response.SetHeader(conf.SessionName, fmt.Sprintf("%s", payload))
+                                kong.Response.Exit(200, payload, headers)
+                        }
+
+                } else if sessionJSON.Action == "delete" {
+                        //if delete
+                        res := deleteSessionData(sessionJSON.Key)
+
+                        if strings.Contains(res, "Error") {
+                                //an error occured
+                                payload = `{"status":"failure", "error":"` + res + `"}`
+                                kong.Response.Exit(500, payload, headers)
+                                return
+                        } else {
+                                payload = `{"status":"success"}`
+                                kong.Response.SetHeader(conf.SessionName, fmt.Sprintf("%s", payload))
+                                kong.Response.Exit(200, payload, headers)
+                        }
+
+                } else {
+                        //they passed an action thats not supported
+                        payload = `{"status":"failure", "error":"unsupported action"}`
+                        kong.Response.SetHeader(conf.SessionName, fmt.Sprintf("%s", payload))
+                        kong.Response.Exit(401, payload, headers)
+                }
+        }
+
+}
+
+//creates a unique user ID for validating the sessions
+//and preventing session hijacking
+func generateUserSig(kong *pdk.PDK) string {
+        userAgent, err := kong.Request.GetHeader("user-agent")
+        if err != nil {
+                userAgent = "no-ua"
+        }
+        xFor, err := kong.Request.GetHeader("x-forwarded-for")
+        if err != nil {
+                xFor = "no-for"
+        }
+        xHost, err := kong.Request.GetHeader("x-forwarded-host")
+        if err != nil {
+                xHost = "no-host"
+        }
+        realIp, err := kong.Request.GetHeader("x-real-ip")
+        if err != nil {
+                realIp = "no-ip"
+        }
+        sig := xFor + xHost + realIp + userAgent
+
+        return sig
+}
+
+//creates a new session and returns the session id
+func createSessionData(sig string, data map[string]interface{}) string {
+        redisDB := redis.NewClient(&redis.Options{
+                Addr:     dbHost,
+                Password: dbPass,
+                DB:       0, // use default DB
+        })
+
+        id := xid.New()
+        now := time.Now()
+        ts := now.Unix()
+        s := strconv.FormatInt(ts, 10)
+
+        //add time and sig to map
+        data["time"] = s
+        data["sig"] = sig
+
+        //convert object to string
+        //convert map back to string
+        jsonStr, _ := json.Marshal(data)
+
+        //write to redis
+        err := redisDB.Set(
+                id.String(),
+                jsonStr,
+                0).Err()
+
+        if err != nil {
+                log.Printf("%s", err)
+                return "Create Session Error: " + err.Error()
+        }
+
+        return id.String()
+}
+
+//returns the session data for a given key
+func readSessionData(key string) string {
+        redisDB := redis.NewClient(&redis.Options{
+                Addr:     dbHost,
+                Password: dbPass,
+                DB:       0, // use default DB
+        })
+
+        val2, err := redisDB.Get(key).Result()
+        log.Printf("%s", val2)
+
+        if err == redis.Nil {
+                log.Printf("%s", "invalid session id")
+                return "Invalid"
+        } else if err != nil {
+                log.Printf("Read Session Error: %s", err)
+                return "Read Session Error: " + err.Error()
+        } else {
+                return val2
+        }
+}
+
+//updates session data with given data, returns true on success
+func updateSessionData(key string, data string) string {
+        redisDB := redis.NewClient(&redis.Options{
+                Addr:     dbHost,
+                Password: dbPass,
+                DB:       0, // use default DB
+        })
+
+        err := redisDB.Set(
+                key,
+                data,
+                0).Err()
+
+        if err != nil {
+                log.Printf("Update Session Error: %s", err)
+                return "Update Session Error: " + err.Error()
+        }
+
+        return "Success"
+}
+
+//deletes a session and returns true on success
+func deleteSessionData(key string) string {
+        redisDB := redis.NewClient(&redis.Options{
+                Addr:     dbHost,
+                Password: dbPass,
+                DB:       0, // use default DB
+        })
+
+        err := redisDB.Del(key).Err()
+
+        if err != nil {
+                log.Printf("Delete Session Error: %s", err)
+                return "Delete Session Error: " + err.Error()
+        }
+
+        return "Success"
+}
+bash-5.1$ 
+bash-5.1$ 
