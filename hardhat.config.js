@@ -14,7 +14,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 });
 
-const RINKEBY_ACCOUNT_PRIVATE_KEY = "82ac048b9b48090575c92a4eac30674a883331f7c25a2204163e4a72d1532ff2"
+const RINKEBY_ACCOUNT_PRIVATE_KEY = ""
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
   defaultNetwork: "localhost",
   networks: {
     rinkeby: {
-      url: `https://eth-rinkeby.alchemyapi.io/v2/XC1oMBvkI00FIe3ExNOHT9PKfV0BcDIm`,
+      url: ``,
       accounts: [RINKEBY_ACCOUNT_PRIVATE_KEY]
     }
   }
