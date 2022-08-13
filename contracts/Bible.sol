@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-import "hardhat/console.sol";
 
 contract Bible {
     struct BibleVerse {
@@ -33,7 +32,7 @@ contract Bible {
 
     // Function to set OR update an existing bible verse based on verse identifier
     function updateBibleVerse(string memory verseIdentifier, string memory verse) public returns (string memory) {
-        if(!BIBLE_VERSES[verseIdentifier].BIBLE_VERSE_LOCKED && ADMINS[msg.sender]) BIBLE_VERSES[verseIdentifier].BIBLE_VERSE = verse;
+        if(!BIBLE_VERSES[verseIdentifier].BIBLE_VERSE_LOCKED) BIBLE_VERSES[verseIdentifier].BIBLE_VERSE = verse;
         return BIBLE_VERSES[verseIdentifier].BIBLE_VERSE;
     }
 }
