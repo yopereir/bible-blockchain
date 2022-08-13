@@ -90,12 +90,12 @@ describe("Bible", function () {
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
     });
 
-    it("Should NOT set the shortest verse in the bible if NOT admin OR super admin", async function () {
+    it("Should set the shortest verse in the bible if NOT admin OR super admin", async function () {
       const [verseIdentifier, verse] = ["43-11-35-0", "Jesus wept."]
       await bible.addNewAdmin(otherUser, false);
-      expect(await bible.connect(await ethers.getSigner(otherUser)).callStatic.updateBibleVerse(verseIdentifier, verse)).to.equal('');
+      expect(await bible.connect(await ethers.getSigner(otherUser)).callStatic.updateBibleVerse(verseIdentifier, verse)).to.equal(verse);
       await bible.connect(await ethers.getSigner(otherUser)).updateBibleVerse(verseIdentifier, verse);
-      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal('');
+      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
     });
 
@@ -138,7 +138,7 @@ describe("Bible", function () {
     });
   });
 
-  describe("Deploy all bible verses", async function () {
+  describe.skip("Deploy all bible verses", async function () {
     const bibles =  require('../data/bible_verses.json');
     const verses = [];
     bibles.Bibles.forEach(bible => {bible.verses.forEach(verse => {verses.push({verseIdentifier: verse.book+"-"+verse.chapter+"-"+verse.verse+"-"+bible.id, verse:verse.text})})});
@@ -166,7 +166,7 @@ describe("Bible", function () {
     });
   });
 
-  describe("Deploy bible to rinkeby testnet", async function () {
+  describe.skip("Deploy bible to rinkeby testnet", async function () {
     let owner, otherUser, Bible, bible;
     async function deployment () {
       owner = (await hre.ethers.getSigners())[0].address;
@@ -177,7 +177,7 @@ describe("Bible", function () {
         return await deployment();
     });
 
-    it.only("Should set and then get the last verse in the bible if super admin", async function () {
+    it("Should set and then get the last verse in the bible if super admin", async function () {
       const [verseIdentifier, verse] = ["66-22-21-0", "The grace of the Lord Jesus be with the saints. Amen."]
       await bible.updateBibleVerse(verseIdentifier, verse);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse);

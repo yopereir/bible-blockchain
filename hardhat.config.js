@@ -22,7 +22,7 @@ module.exports = {
   defaultNetwork: "localhost",
   networks: {
     rinkeby: {
-      url: `https://rinkeby.infura.io/v3/`,
+      url: `https://eth-rinkeby.alchemyapi.io/v2/XC1oMBvkI00FIe3ExNOHT9PKfV0BcDIm`,
       accounts: [RINKEBY_ACCOUNT_PRIVATE_KEY]
     }
   }
