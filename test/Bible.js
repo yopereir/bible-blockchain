@@ -138,7 +138,7 @@ describe("Bible", function () {
     });
   });
 
-  describe.only("Deploy all bible verses", async function () {
+  describe("Deploy all bible verses", async function () {
     const bibles =  require('../data/bible_verses.json');
     const verses = [];
     bibles.Bibles.forEach(bible => {bible.verses.forEach(verse => {verses.push({verseIdentifier: verse.book+"-"+verse.chapter+"-"+verse.verse+"-"+bible.id, verse:verse.text})})});
@@ -166,4 +166,22 @@ describe("Bible", function () {
     });
   });
 
+  describe("Deploy bible to rinkeby testnet", async function () {
+    let owner, otherUser, Bible, bible;
+    async function deployment () {
+      owner = (await hre.ethers.getSigners())[0].address;
+      Bible = await ethers.getContractFactory("Bible", owner);
+      bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+    }  
+    before(async function() {
+        return await deployment();
+    });
+
+    it.only("Should set and then get the last verse in the bible if super admin", async function () {
+      const [verseIdentifier, verse] = ["66-22-21-0", "The grace of the Lord Jesus be with the saints. Amen."]
+      await bible.updateBibleVerse(verseIdentifier, verse);
+      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse);
+      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
+    });
+  });
 });
