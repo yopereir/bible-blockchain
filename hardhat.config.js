@@ -1,4 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
+require('dotenv').config();
 task("balance", "Prints an account's balance")
 .addParam("account", "The account's address")
 .setAction(async (taskArgs) => {
@@ -14,16 +15,20 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 });
 
-const RINKEBY_ACCOUNT_PRIVATE_KEY = ""
+
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.9",
   defaultNetwork: "localhost",
   networks: {
-    rinkeby: {
-      url: ``,
-      accounts: [RINKEBY_ACCOUNT_PRIVATE_KEY]
-    }
+    goerli: {
+      url: process.env.GOERLI_ACCOUNT_URL,
+      accounts: [process.env.ACCOUNT_PRIVATE_KEY]
+    },
+    polygon: {
+      url: process.env.POLYGON_MUMBAI_ACCOUNT_URL,
+      accounts: [process.env.ACCOUNT_PRIVATE_KEY]
+    },
   }
 };

@@ -71,17 +71,17 @@ describe("Bible", function () {
 
     it("Should set and then get the last verse in the bible if super admin", async function () {
       const [verseIdentifier, verse] = ["66-22-21-0", "The grace of the Lord Jesus be with the saints. Amen."]
-      await bible.updateBibleVerse(verseIdentifier, verse);
+      await bible.updateBibleVerse(verseIdentifier, verse, false);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
     });
 
-    it("Should set and then get the second last verse in the bible if called by regular admin", async function () {
+    it("Should set, lock and then get the second last verse in the bible if called by regular admin", async function () {
       const [verseIdentifier, verse] = ["66-22-20-0", "He who testifieth these things saith, Yea: I come quickly. Amen: come, Lord Jesus."]
       await bible.addNewAdmin(otherUser, true);
-      await bible.connect(await ethers.getSigner(otherUser)).updateBibleVerse(verseIdentifier, verse);
+      await bible.connect(await ethers.getSigner(otherUser)).updateBibleVerse(verseIdentifier, verse, true);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse);
-      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
+      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(true);
     });
 
     it("Should return empty string for verse and false for lock identifier that is not set", async function () {
@@ -93,15 +93,24 @@ describe("Bible", function () {
     it("Should set the shortest verse in the bible if NOT admin OR super admin", async function () {
       const [verseIdentifier, verse] = ["43-11-35-0", "Jesus wept."]
       await bible.addNewAdmin(otherUser, false);
-      expect(await bible.connect(await ethers.getSigner(otherUser)).callStatic.updateBibleVerse(verseIdentifier, verse)).to.equal(verse);
-      await bible.connect(await ethers.getSigner(otherUser)).updateBibleVerse(verseIdentifier, verse);
+      expect(await bible.connect(await ethers.getSigner(otherUser)).callStatic.updateBibleVerse(verseIdentifier, verse, false)).to.equal(verse);
+      await bible.connect(await ethers.getSigner(otherUser)).updateBibleVerse(verseIdentifier, verse, false);
+      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse);
+      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
+    });
+
+    it("Should set the shortest verse in the bible and NOT lock if NOT admin OR super admin", async function () {
+      const [verseIdentifier, verse] = ["43-11-35-0", "Jesus wept."]
+      await bible.addNewAdmin(otherUser, false);
+      expect(await bible.connect(await ethers.getSigner(otherUser)).callStatic.updateBibleVerse(verseIdentifier, verse, true)).to.equal(verse);
+      await bible.connect(await ethers.getSigner(otherUser)).updateBibleVerse(verseIdentifier, verse ,true);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
     });
 
     it("Should lock and unlock a verse by super admin and admin", async function () {
       const [verseIdentifier, verse] = ["43-11-35-0", "Jesus wept."]
-      await bible.updateBibleVerse(verseIdentifier, verse);
+      await bible.updateBibleVerse(verseIdentifier, verse, false);
       await bible.addNewAdmin(otherUser, true);
       await bible.lockBibleVerse(verseIdentifier, false);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
@@ -118,37 +127,40 @@ describe("Bible", function () {
     it("Should NOT update verse in the bible if Lock is present AND admin OR super admin", async function () {
       const [verseIdentifier, verse] = ["43-11-35-0", "Jesus wept."]
       await bible.addNewAdmin(otherUser, true);
-      await bible.updateBibleVerse(verseIdentifier, verse);
+      await bible.updateBibleVerse(verseIdentifier, verse, false);
       await bible.lockBibleVerse(verseIdentifier, true);
-      await bible.updateBibleVerse(verseIdentifier, verse+"update");
+      await bible.updateBibleVerse(verseIdentifier, verse+"update", false);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(true);
-      await bible.connect(await ethers.getSigner(otherUser)).updateBibleVerse(verseIdentifier, verse+"update");
+      await bible.connect(await ethers.getSigner(otherUser)).updateBibleVerse(verseIdentifier, verse+"update", false);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(true);
       await bible.connect(await ethers.getSigner(otherUser)).lockBibleVerse(verseIdentifier, false);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
-      await bible.connect(await ethers.getSigner(otherUser)).updateBibleVerse(verseIdentifier, verse+"update");
+      await bible.connect(await ethers.getSigner(otherUser)).updateBibleVerse(verseIdentifier, verse+"update", false);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse+"update");
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
-      await bible.updateBibleVerse(verseIdentifier, verse);
+      await bible.updateBibleVerse(verseIdentifier, verse, false);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse);
       expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
     });
   });
 
-  describe.skip("Deploy all bible verses", async function () {
+  describe.skip("Deploy all bible verses to dev network", async function () {
     const bibles =  require('../data/bible_verses.json');
+    require('dotenv').config();
     const verses = [];
     bibles.Bibles.forEach(bible => {bible.verses.forEach(verse => {verses.push({verseIdentifier: verse.book+"-"+verse.chapter+"-"+verse.verse+"-"+bible.id, verse:verse.text})})});
     let totalCostOfProject = 0n;
     let owner, otherUser, Bible, bible;
     async function deployment () {
       owner = (await hre.ethers.getSigners())[0].address;
-      otherUser = (await hre.ethers.getSigners())[1].address;
+      //otherUser = (await hre.ethers.getSigners())[1].address;
       Bible = await ethers.getContractFactory("Bible", owner);
-      bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+      if(process.env.CONTRACT_ADDRESS) {bible = await Bible.connect(await ethers.getSigner(owner)).attach("0xfded1e73b71c1cc2f177789bcc0db3fa55912eda");console.log(bible);}
+      else {bible = await Bible.connect(await ethers.getSigner(owner)).deploy();console.log("Contract address: "+bible.address);}
+      
       totalCostOfProject = await hre.ethers.provider.estimateGas(Bible.getDeployTransaction());
     }  
     before(async function() {
@@ -158,30 +170,30 @@ describe("Bible", function () {
     it("Should deploy all bible verses of ASV edition", async function () {
       console.log("Cost of deploying contract: "+totalCostOfProject);
       this.timeout(6*60*60*1000); // set mocha timeout such that 1hr = 60 * 60 * 1000 ms
-      for (verse of verses) {
+      for (verse of verses.slice(0, 1533)) {
         console.log(verse.verseIdentifier);
-        totalCostOfProject = totalCostOfProject.add((await bible.updateBibleVerse(verse.verseIdentifier, verse.verse)).gasPrice);
+        // await new Promise(resolve => setTimeout(resolve, 3000));
+        let tx = await bible.updateBibleVerse(verse.verseIdentifier, verse.verse, true);
+        totalCostOfProject = totalCostOfProject.add(tx.gasPrice);
+        console.log("Gas Price for deploying verse: " + tx.gasPrice);
+        await tx.wait();
+      }
+      console.log("Total Cost of project: "+totalCostOfProject);
+    });
+
+    it.skip("Should lock all bible verses of ASV edition", async function () {
+      console.log("Cost of deploying contract: "+totalCostOfProject);
+      this.timeout(6*60*60*1000); // set mocha timeout such that 1hr = 60 * 60 * 1000 ms
+      for (verse of verses.slice(0, 1533)) {
+        console.log(verse.verseIdentifier);
+        // await new Promise(resolve => setTimeout(resolve, 3000));
+        let tx = await bible.lockBibleVerse(verse.verseIdentifier, true);
+        totalCostOfProject = totalCostOfProject.add(tx.gasPrice);
+        console.log("Gas Price for deploying verse: " + tx.gasPrice);
+        await tx.wait();
       }
       console.log("Total Cost of project: "+totalCostOfProject);
     });
   });
 
-  describe.skip("Deploy bible to rinkeby testnet", async function () {
-    let owner, otherUser, Bible, bible;
-    async function deployment () {
-      owner = (await hre.ethers.getSigners())[0].address;
-      Bible = await ethers.getContractFactory("Bible", owner);
-      bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
-    }  
-    before(async function() {
-        return await deployment();
-    });
-
-    it("Should set and then get the last verse in the bible if super admin", async function () {
-      const [verseIdentifier, verse] = ["66-22-21-0", "The grace of the Lord Jesus be with the saints. Amen."]
-      await bible.updateBibleVerse(verseIdentifier, verse);
-      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE).to.equal(verse);
-      expect((await bible.BIBLE_VERSES(verseIdentifier)).BIBLE_VERSE_LOCKED).to.equal(false);
-    });
-  });
 });

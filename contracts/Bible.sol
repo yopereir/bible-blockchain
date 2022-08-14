@@ -31,8 +31,11 @@ contract Bible {
     }
 
     // Function to set OR update an existing bible verse based on verse identifier
-    function updateBibleVerse(string memory verseIdentifier, string memory verse) public returns (string memory) {
-        if(!BIBLE_VERSES[verseIdentifier].BIBLE_VERSE_LOCKED) BIBLE_VERSES[verseIdentifier].BIBLE_VERSE = verse;
+    function updateBibleVerse(string memory verseIdentifier, string memory verse, bool shouldLockVerse) public returns (string memory) {
+        if(!BIBLE_VERSES[verseIdentifier].BIBLE_VERSE_LOCKED) {
+            BIBLE_VERSES[verseIdentifier].BIBLE_VERSE = verse;
+            if(ADMINS[msg.sender]) BIBLE_VERSES[verseIdentifier].BIBLE_VERSE_LOCKED = shouldLockVerse;
+        }
         return BIBLE_VERSES[verseIdentifier].BIBLE_VERSE;
     }
 }
