@@ -12,6 +12,10 @@ function getBookNumber(bookName) {
     return books.filter(book=>book.Name == bookName)[0];
 }
 
+function getVerseNumber(verseIdentifier) {
+    return bibles.Bibles[0].verses.indexOf(bibles.Bibles[0].verses.filter(verse=>verse.book+"-"+verse.chapter+"-"+verse.verse+"-"+bibles.Bibles[0].id == verseIdentifier)[0]);
+}
+
 function getNumberOfChaptersInBook(bookName) {
     const book = getBookNumber(bookName);
     return bibles.Bibles[0].verses.filter(verse=>verse.book == book.Number).pop().chapter
@@ -26,6 +30,8 @@ function getNumberOfVersesInChapterInBook(chapterNumber, bookName) {
 console.log(verses.length); //total verses in bible
 console.log(books.length); // total books in bible
 
+// get verse number based on verse identifier
+//bibles.Bibles[0].verses.indexOf(bibles.Bibles[0].verses.filter(verse=>verse.book+"-"+verse.chapter+"-"+verse.verse+"-"+bibles.Bibles[0].id == "1-10-32-0")[0]);
 // get number of verses in each book
 //books.forEach(book=>{console.log(book.Name, bibles.Bibles[0].verses.filter(verse=>verse.book == book.Number).length)})
 // get number of chapters in each book
