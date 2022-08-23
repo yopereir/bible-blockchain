@@ -23,7 +23,7 @@ function getVerseNumber(verseIdentifier) {
 }
 exports.getVerseNumber = getVerseNumber;
 function getVerseIdentifiers(verseIdentifier) {
-    return verseIdentifier.match(/[^-]/g);
+    return verseIdentifier.match(/(\d+)/g);
 }
 exports.getVerseIdentifiers = getVerseIdentifiers;
 function getNumberOfChaptersInBook(bookName) {
