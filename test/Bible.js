@@ -147,7 +147,7 @@ describe("Bible", function () {
     });
   });
 
-  describe.skip("Deploy all bible verses to dev network", async function () {
+  describe.only("Deploy all bible verses to dev network", async function () {
     const bibles =  require('../data/bible_verses.json');
     require('dotenv').config();
     const verses = [];
@@ -170,11 +170,12 @@ describe("Bible", function () {
     it("Should deploy all bible verses of ASV edition", async function () {
       console.log("Cost of deploying contract: "+totalCostOfProject);
       this.timeout(6*60*60*1000); // set mocha timeout such that 1hr = 60 * 60 * 1000 ms
-      for (verse of verses.slice(0, 1533)) {
+      for (verse of verses.slice(384, 1533)) {
         console.log(verse.verseIdentifier);
         // await new Promise(resolve => setTimeout(resolve, 3000));
         let tx = await bible.updateBibleVerse(verse.verseIdentifier, verse.verse, true);
         totalCostOfProject = totalCostOfProject.add(tx.gasPrice);
+        console.log(tx);
         console.log("Gas Price for deploying verse: " + tx.gasPrice);
         await tx.wait();
       }
