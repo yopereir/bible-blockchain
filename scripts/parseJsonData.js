@@ -50,4 +50,4 @@ exports.allBibles = bibles.Bibles;
 //books.forEach(book=>{console.log(book.Name, getNumberOfChaptersInBook(book.Name))})
 // get number of verses in given chapter of given book
 //console.log(getNumberOfVersesInChapterInBook(22,"Revelation"));
-console.log(getVerseNumber("1-16-5-0")); // get verse number from verse identifier
+console.log(getVerseNumber("1-17-18-0")); // get verse number from verse identifier

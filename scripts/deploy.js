@@ -5,24 +5,35 @@
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
 const hre = require("hardhat");
+const bibles =  require('../data/bible_verses.json');
+require('dotenv').config();
+const verses = [];
+bibles.Bibles.forEach(bible => {bible.verses.forEach(verse => {verses.push({verseIdentifier: verse.book+"-"+verse.chapter+"-"+verse.verse+"-"+bible.id, verse:verse.text})})});
+let totalCostOfProject = 0n;
+let owner, Bible, bible;
+
+async function deployment () {
+  owner = (await hre.ethers.getSigners())[0].address;
+  Bible = await ethers.getContractFactory("Bible", owner);
+  if(process.env.CONTRACT_ADDRESS) {bible = await Bible.connect(await ethers.getSigner(owner)).attach("0xfded1e73b71c1cc2f177789bcc0db3fa55912eda");console.log(bible);}
+  else {bible = await Bible.connect(await ethers.getSigner(owner)).deploy();console.log("Contract address: "+bible.address);}
+  
+  totalCostOfProject = await hre.ethers.provider.estimateGas(Bible.getDeployTransaction());
+}
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
-
-  const lockedAmount = hre.ethers.utils.parseEther("1");
-
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const Counter = await hre.ethers.getContractFactory("Counter");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-  const counter = await Counter.deploy();
-
-  await lock.deployed();
-  await counter.deployed();
-
-  console.log("Lock with 1 ETH deployed to:", lock.address);
-  console.log("Counter app deployed to:", counter.address);
+  await deployment();
+  console.log("Cost of deploying contract: "+totalCostOfProject);
+  for (verse of verses.slice(415, 1533)) {
+    console.log(verse.verseIdentifier);
+    // await new Promise(resolve => setTimeout(resolve, 3000));
+    let tx = await bible.updateBibleVerse(verse.verseIdentifier, verse.verse, true);
+    totalCostOfProject = totalCostOfProject.add(tx.gasPrice);
+    console.log(tx);
+    console.log("Gas Price for deploying verse: " + tx.gasPrice);
+    await tx.wait();
+  }
+  console.log("Total Cost of project: "+totalCostOfProject);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
