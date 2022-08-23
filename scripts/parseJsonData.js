@@ -23,7 +23,8 @@ function getVerseNumber(verseIdentifier) {
 }
 exports.getVerseNumber = getVerseNumber;
 function getVerseIdentifiers(verseIdentifier) {
-    return verseIdentifier.match(/(\d+)/g);
+    let ids = verseIdentifier.match(/(\d+)/g);
+    return {book: ids[0], chapter: ids[1], verse: ids[2], bible: ids[3]}
 }
 exports.getVerseIdentifiers = getVerseIdentifiers;
 function getNumberOfChaptersInBook(bookName) {
