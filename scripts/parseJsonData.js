@@ -48,7 +48,26 @@ exports.allBibles = bibles.Bibles;
 // get number of verses in each book
 //books.forEach(book=>{console.log(book.Name, bibles.Bibles[0].verses.filter(verse=>verse.book == book.Number).length)})
 // get number of chapters in each book
-//books.forEach(book=>{console.log(book.Name, getNumberOfChaptersInBook(book.Name))})
+//console.log(book.Name, getNumberOfChaptersInBook(book.Name))
+
 // get number of verses in given chapter of given book
 //console.log(getNumberOfVersesInChapterInBook(22,"Revelation"));
 console.log(getVerseNumber("1-17-18-0")); // get verse number from verse identifier
+
+
+// MISC:
+/*
+books.forEach(book=>{console.log(book.Name, getNumberOfChaptersInBook(book.Name))
+    let largestChapter = 1
+    let numberOfVerses = 1
+    Array(getNumberOfChaptersInBook(book.Name)).fill().map((v,i)=>i+1).forEach((chapter)=>
+    {
+        if(numberOfVerses < getNumberOfVersesInChapterInBook(chapter,book.Name)) {
+            largestChapter = chapter
+            numberOfVerses = getNumberOfVersesInChapterInBook(chapter,book.Name)
+        }
+    })
+    console.log("Largest Chapter: "+largestChapter);
+    console.log("Number of verses: "+getNumberOfVersesInChapterInBook(largestChapter,book.Name))
+})
+*/
