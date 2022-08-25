@@ -24,7 +24,7 @@ async function deployment () {
 async function main() {
   await deployment();
   console.log("Cost of deploying contract: "+totalCostOfProject);
-  for (verse of verses.slice(415, 1533)) {
+  for (verse of verses.slice(2599, 3533)) {
     console.log(verse.verseIdentifier);
     // await new Promise(resolve => setTimeout(resolve, 3000));
     let tx = await bible.updateBibleVerse(verse.verseIdentifier, verse.verse, true);
