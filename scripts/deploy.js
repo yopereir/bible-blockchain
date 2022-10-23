@@ -15,7 +15,7 @@ let owner, Bible, bible;
 async function deployment () {
   owner = (await hre.ethers.getSigners())[0].address;
   Bible = await ethers.getContractFactory("Bible", owner);
-  if(process.env.CONTRACT_ADDRESS) {bible = await Bible.connect(await ethers.getSigner(owner)).attach("0xfded1e73b71c1cc2f177789bcc0db3fa55912eda");console.log(bible);}
+  if(process.env.CONTRACT_ADDRESS) {bible = await Bible.connect(await ethers.getSigner(owner)).attach(process.env.CONTRACT_ADDRESS);console.log(bible);}
   else {bible = await Bible.connect(await ethers.getSigner(owner)).deploy();console.log("Contract address: "+bible.address);}
   
   totalCostOfProject = await hre.ethers.provider.estimateGas(Bible.getDeployTransaction());

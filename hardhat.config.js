@@ -22,12 +22,8 @@ module.exports = {
   solidity: "0.8.9",
   defaultNetwork: "polygon",
   networks: {
-    goerli: {
-      url: process.env.GOERLI_ACCOUNT_URL,
-      accounts: [process.env.ACCOUNT_PRIVATE_KEY]
-    },
     polygon: {
-      url: process.env.POLYGON_MUMBAI_ACCOUNT_URL,
+      url: process.env.POLYGON_ACCOUNT_URL,
       accounts: [process.env.ACCOUNT_PRIVATE_KEY]
     },
   }

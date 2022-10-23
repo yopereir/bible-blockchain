@@ -158,7 +158,7 @@ describe("Bible", function () {
       owner = (await hre.ethers.getSigners())[0].address;
       //otherUser = (await hre.ethers.getSigners())[1].address;
       Bible = await ethers.getContractFactory("Bible", owner);
-      if(process.env.CONTRACT_ADDRESS) {bible = await Bible.connect(await ethers.getSigner(owner)).attach("0xfded1e73b71c1cc2f177789bcc0db3fa55912eda");console.log(bible);}
+      if(process.env.CONTRACT_ADDRESS) {bible = await Bible.connect(await ethers.getSigner(owner)).attach(process.env.CONTRACT_ADDRESS);console.log(bible);}
       else {bible = await Bible.connect(await ethers.getSigner(owner)).deploy();console.log("Contract address: "+bible.address);}
       
       totalCostOfProject = await hre.ethers.provider.estimateGas(Bible.getDeployTransaction());
@@ -170,10 +170,10 @@ describe("Bible", function () {
     it("Should deploy all bible verses of ASV edition", async function () {
       console.log("Cost of deploying contract: "+totalCostOfProject);
       this.timeout(6*60*60*1000); // set mocha timeout such that 1hr = 60 * 60 * 1000 ms
-      for (verse of verses.slice(1029, 1533)) {
+      for (verse of verses.slice(300, 500)) {
         console.log(verse.verseIdentifier);
         // await new Promise(resolve => setTimeout(resolve, 3000));
-        let tx = await bible.updateBibleVerse(verse.verseIdentifier, verse.verse, true);
+        let tx = await bible.updateBibleVerse(verse.verseIdentifier, verse.verse, true, { maxFeePerGas: ethers.utils.parseUnits("140", "gwei"),maxPriorityFeePerGas : ethers.utils.parseUnits("80", "gwei")});
         totalCostOfProject = totalCostOfProject.add(tx.gasPrice);
         console.log(tx);
         console.log("Gas Price for deploying verse: " + tx.gasPrice);

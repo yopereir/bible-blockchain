@@ -9,13 +9,19 @@ contract Bible {
     // identifier for bible verses are in the format: BookNumber-ChapterNumber-verseNumber-TranslationID
     mapping(string=>BibleVerse) public BIBLE_VERSES;
     // the original owner of the smart contract 
-    address public immutable SUPER_ADMIN;
+    address public SUPER_ADMIN;
     // maapping of all admins that returns true if given address is an admin
     mapping(address=>bool) public ADMINS;
 
     constructor() {
         SUPER_ADMIN = msg.sender;
         ADMINS[msg.sender] = true;
+    }
+
+    // Function to set super admin. can only be called set by existing super admin.
+    function setSuperAdmin(address newAdminAddress) public returns (bool) {
+        if(SUPER_ADMIN == msg.sender) SUPER_ADMIN = newAdminAddress;
+        return SUPER_ADMIN == newAdminAddress;
     }
 
     // Function to add or remove admin. Can only be done by super admin
