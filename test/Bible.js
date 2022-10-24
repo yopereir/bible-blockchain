@@ -158,8 +158,13 @@ describe("Bible", function () {
       owner = (await hre.ethers.getSigners())[0].address;
       //otherUser = (await hre.ethers.getSigners())[1].address;
       Bible = await ethers.getContractFactory("Bible", owner);
-      if(process.env.CONTRACT_ADDRESS) {bible = await Bible.connect(await ethers.getSigner(owner)).attach(process.env.CONTRACT_ADDRESS);console.log(bible);}
-      else {bible = await Bible.connect(await ethers.getSigner(owner)).deploy();console.log("Contract address: "+bible.address);}
+      if(process.env.CONTRACT_ADDRESS) {bible = await Bible.connect(await ethers.getSigner(owner)).attach(process.env.CONTRACT_ADDRESS);console.log("Contract address: "+bible.address);}
+      else {
+        //bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+        bible = await upgrades.deployProxy(Bible, { initializer: 'initialize' });
+        bible.deployed();
+        console.log("Contract address: "+bible.address);
+      }
       
       totalCostOfProject = await hre.ethers.provider.estimateGas(Bible.getDeployTransaction());
     }  

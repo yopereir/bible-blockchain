@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract Bible {
+contract Bible is Initializable {
     struct BibleVerse {
         string BIBLE_VERSE; //string containing the full bible verse
         bool BIBLE_VERSE_LOCKED; // true value meaning it is locked and cannot be edited
@@ -13,14 +14,18 @@ contract Bible {
     // maapping of all admins that returns true if given address is an admin
     mapping(address=>bool) public ADMINS;
 
-    constructor() {
+    function initialize() public initializer {
         SUPER_ADMIN = msg.sender;
         ADMINS[msg.sender] = true;
     }
 
     // Function to set super admin. can only be called set by existing super admin.
     function setSuperAdmin(address newAdminAddress) public returns (bool) {
-        if(SUPER_ADMIN == msg.sender) SUPER_ADMIN = newAdminAddress;
+        if(SUPER_ADMIN == msg.sender) {
+            SUPER_ADMIN = newAdminAddress;
+            ADMINS[newAdminAddress] = true;
+            ADMINS[msg.sender] = false;
+        }
         return SUPER_ADMIN == newAdminAddress;
     }
 

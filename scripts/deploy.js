@@ -15,16 +15,29 @@ let owner, Bible, bible;
 async function deployment () {
   owner = (await hre.ethers.getSigners())[0].address;
   Bible = await ethers.getContractFactory("Bible", owner);
-  if(process.env.CONTRACT_ADDRESS) {bible = await Bible.connect(await ethers.getSigner(owner)).attach(process.env.CONTRACT_ADDRESS);console.log(bible);}
-  else {bible = await Bible.connect(await ethers.getSigner(owner)).deploy();console.log("Contract address: "+bible.address);}
+  if(process.env.CONTRACT_ADDRESS) {bible = await Bible.connect(await ethers.getSigner(owner)).attach(process.env.CONTRACT_ADDRESS);console.log("Contract address: "+bible.address);}
+  else {
+    //bible = await Bible.connect(await ethers.getSigner(owner)).deploy();
+    bible = await upgrades.deployProxy(Bible, { initializer: 'initialize' });
+    bible.deployed();
+    console.log("Contract address: "+bible.address);
+  }
   
   totalCostOfProject = await hre.ethers.provider.estimateGas(Bible.getDeployTransaction());
+}
+
+async function upgradeContract () {
+  owner = (await hre.ethers.getSigners())[0].address;
+  Bible = await ethers.getContractFactory("Bible", owner);
+  const Bible = await ethers.getContractFactory('Bible');
+  await upgrades.upgradeProxy(process.env.CONTRACT_ADDRESS, Bible);
+  console.log("Contract address: "+bible.address);
 }
 
 async function main() {
   await deployment();
   console.log("Cost of deploying contract: "+totalCostOfProject);
-  for (verse of verses.slice(2599, 3533)) {
+  for (verse of verses.slice(0, 5)) {
     console.log(verse.verseIdentifier);
     // await new Promise(resolve => setTimeout(resolve, 3000));
     let tx = await bible.updateBibleVerse(verse.verseIdentifier, verse.verse, true);
