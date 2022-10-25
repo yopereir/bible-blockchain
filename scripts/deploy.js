@@ -37,14 +37,24 @@ async function upgradeContract () {
 async function main() {
   await deployment();
   console.log("Cost of deploying contract: "+totalCostOfProject);
-  for (verse of verses.slice(0, 5)) {
-    console.log(verse.verseIdentifier);
-    // await new Promise(resolve => setTimeout(resolve, 3000));
-    let tx = await bible.updateBibleVerse(verse.verseIdentifier, verse.verse, true);
-    totalCostOfProject = totalCostOfProject.add(tx.gasPrice);
-    console.log(tx);
-    console.log("Gas Price for deploying verse: " + tx.gasPrice);
-    await tx.wait();
+  for (verse of verses.slice(212, 300)) {
+    let wasTransactionSuccessful = false;
+    while(!wasTransactionSuccessful){
+      try{
+        console.log(verse.verseIdentifier);
+        let tx = await bible.updateBibleVerse(verse.verseIdentifier, verse.verse, true);
+        totalCostOfProject = totalCostOfProject.add(tx.gasPrice);
+        console.log(tx);
+        console.log("Gas Price for deploying verse: " + tx.gasPrice);
+        await tx.wait();
+        wasTransactionSuccessful = true;
+      }
+      catch(e){
+        console.log(e.message);
+        console.log("Retrying after 10s.");
+        await new Promise(resolve => setTimeout(resolve, 10000));
+      }
+    }
   }
   console.log("Total Cost of project: "+totalCostOfProject);
 }
