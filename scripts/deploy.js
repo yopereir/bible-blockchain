@@ -37,7 +37,7 @@ async function upgradeContract () {
 async function main() {
   await deployment();
   console.log("Cost of deploying contract: "+totalCostOfProject);
-  for (verse of verses.slice(212, 300)) {
+  for (verse of verses.slice(213, 225)) {
     let wasTransactionSuccessful = false;
     while(!wasTransactionSuccessful){
       try{
