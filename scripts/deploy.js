@@ -27,17 +27,15 @@ async function deployment () {
 }
 
 async function upgradeContract () {
-  owner = (await hre.ethers.getSigners())[0].address;
-  Bible = await ethers.getContractFactory("Bible", owner);
+  const owner = (await hre.ethers.getSigners())[0].address;
   const Bible = await ethers.getContractFactory('Bible');
-  await upgrades.upgradeProxy(process.env.CONTRACT_ADDRESS, Bible);
-  console.log("Contract address: "+bible.address);
+  await upgrades.forceImport(process.env.CONTRACT_ADDRESS, Bible);
 }
 
 async function main() {
   await deployment();
   console.log("Cost of deploying contract: "+totalCostOfProject);
-  for (verse of verses.slice(1646, 3000)) {
+  for (verse of verses.slice(1764, 3000)) {
     let wasTransactionSuccessful = false;
     while(!wasTransactionSuccessful){
       try{

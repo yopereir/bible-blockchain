@@ -49,4 +49,13 @@ contract Bible is Initializable {
         }
         return BIBLE_VERSES[verseIdentifier].BIBLE_VERSE;
     }
+    // Functions to send ether to SUPER_ADMIN in case ether is accidentally sent to this contract as this contract is not intended to have any ether
+    receive() external payable { 
+        (bool sent, ) = SUPER_ADMIN.call{value: msg.value}("");
+        require(sent, "Failed to send Ether to Super Admin.");
+    }
+    fallback() external payable { 
+        (bool sent, ) = SUPER_ADMIN.call{value: msg.value}("");
+        require(sent, "Failed to send Ether to Super Admin.");
+    }
 }

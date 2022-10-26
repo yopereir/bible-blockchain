@@ -52,7 +52,7 @@ exports.allBibles = bibles.Bibles;
 
 // get number of verses in given chapter of given book
 //console.log(getNumberOfVersesInChapterInBook(22,"Revelation"));
-console.log(getVerseNumber("2-5-14-0")); // get verse number from verse identifier
+console.log(getVerseNumber("2-9-22-0")); // get verse number from verse identifier
 console.log(verses[212].verseIdentifier); // get verse identifier verse number
 
 // MISC:
