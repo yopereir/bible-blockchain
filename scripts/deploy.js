@@ -37,12 +37,12 @@ async function upgradeContract () {
 async function main() {
   await deployment();
   console.log("Cost of deploying contract: "+totalCostOfProject);
-  for (verse of verses.slice(213, 225)) {
+  for (verse of verses.slice(1646, 3000)) {
     let wasTransactionSuccessful = false;
     while(!wasTransactionSuccessful){
       try{
         console.log(verse.verseIdentifier);
-        let tx = await bible.updateBibleVerse(verse.verseIdentifier, verse.verse, true);
+        let tx = await bible.updateBibleVerse(verse.verseIdentifier, verse.verse, true,{ maxFeePerGas: ethers.utils.parseUnits("100", "gwei"),maxPriorityFeePerGas : ethers.utils.parseUnits("90", "gwei")});
         totalCostOfProject = totalCostOfProject.add(tx.gasPrice);
         console.log(tx);
         console.log("Gas Price for deploying verse: " + tx.gasPrice);
